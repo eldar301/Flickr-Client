@@ -66,7 +66,15 @@ extension PhotoSearchViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 250, height: 250)
+        return CGSize(width: collectionView.bounds.width, height: 300)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as! PhotoCell
+        let photo = cell.photo
+        let viewController = storyboard?.instantiateViewController(withIdentifier: "photoDetails") as! PhotoDetailsViewController
+        viewController.congifure(withPhoto: photo!)
+        self.navigationController?.pushViewController(viewController, animated: true)
     }
     
 }

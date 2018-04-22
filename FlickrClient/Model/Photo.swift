@@ -10,9 +10,16 @@ import Foundation
 
 struct Photo {
     var id: String
-    var farm: Int
-    var server: String
-    var secret: String
     var url: URL
+    var image: Data?
+    var title: String?
+    var description: String?
+    var date: Date?
+    var owner: Owner?
+    
+    init(id: String, url: URL) {
+        self.id = id
+        self.url = url
+    }
 }
 

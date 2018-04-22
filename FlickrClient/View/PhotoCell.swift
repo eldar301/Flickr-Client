@@ -15,7 +15,7 @@ class PhotoCell: UICollectionViewCell {
     
     var imageTask: URLSessionDataTask?
     
-    var photo: Photo?
+    var photo: Photo!
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -25,6 +25,7 @@ class PhotoCell: UICollectionViewCell {
     }
     
     func configureView(withPhoto photo: Photo) {
+        self.imageView.contentMode = .scaleAspectFill
         self.photo = photo
         self.acitivtyIndicator.hidesWhenStopped = true
         self.acitivtyIndicator.startAnimating()
@@ -32,6 +33,9 @@ class PhotoCell: UICollectionViewCell {
             DispatchQueue.main.async {
                 self?.acitivtyIndicator.stopAnimating()
                 self?.imageView.image = image
+                if let image = image {
+                    self?.photo?.image = UIImagePNGRepresentation(image)
+                }
             }
         })
         imageTask?.resume()

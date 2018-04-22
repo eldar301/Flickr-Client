@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		785B0503208CA03D00FD081F /* Owner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785B0502208CA03D00FD081F /* Owner.swift */; };
+		785B0505208CB09200FD081F /* PhotoDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785B0504208CB09200FD081F /* PhotoDetailsViewController.swift */; };
 		788F34C9208BB69300BF5A4D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788F34C8208BB69300BF5A4D /* AppDelegate.swift */; };
 		788F34CE208BB69300BF5A4D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 788F34CC208BB69300BF5A4D /* Main.storyboard */; };
 		788F34D0208BB69300BF5A4D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 788F34CF208BB69300BF5A4D /* Assets.xcassets */; };
@@ -19,7 +21,7 @@
 		788F3505208BC3C900BF5A4D /* PhotoSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788F3504208BC3C900BF5A4D /* PhotoSearchViewController.swift */; };
 		788F3507208BC5CD00BF5A4D /* PhotoSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788F3506208BC5CD00BF5A4D /* PhotoSearchViewModel.swift */; };
 		788F3509208BC9B000BF5A4D /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788F3508208BC9B000BF5A4D /* PhotoCell.swift */; };
-		788F350B208BD96100BF5A4D /* PhotoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788F350A208BD96100BF5A4D /* PhotoViewModel.swift */; };
+		788F350B208BD96100BF5A4D /* PhotoDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788F350A208BD96100BF5A4D /* PhotoDetailsViewModel.swift */; };
 		87D7D4BA6BE4724B44BCE1D5 /* Pods_FlickrClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8EAF75EC607FBEE0580A9B0 /* Pods_FlickrClient.framework */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +44,8 @@
 
 /* Begin PBXFileReference section */
 		76B491B968A172E44D4B2CE0 /* Pods-FlickrClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlickrClient.release.xcconfig"; path = "Pods/Target Support Files/Pods-FlickrClient/Pods-FlickrClient.release.xcconfig"; sourceTree = "<group>"; };
+		785B0502208CA03D00FD081F /* Owner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Owner.swift; sourceTree = "<group>"; };
+		785B0504208CB09200FD081F /* PhotoDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailsViewController.swift; sourceTree = "<group>"; };
 		788F34C5208BB69300BF5A4D /* FlickrClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlickrClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		788F34C8208BB69300BF5A4D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		788F34CD208BB69300BF5A4D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -60,7 +64,7 @@
 		788F3504208BC3C900BF5A4D /* PhotoSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSearchViewController.swift; sourceTree = "<group>"; };
 		788F3506208BC5CD00BF5A4D /* PhotoSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSearchViewModel.swift; sourceTree = "<group>"; };
 		788F3508208BC9B000BF5A4D /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
-		788F350A208BD96100BF5A4D /* PhotoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewModel.swift; sourceTree = "<group>"; };
+		788F350A208BD96100BF5A4D /* PhotoDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailsViewModel.swift; sourceTree = "<group>"; };
 		A8EAF75EC607FBEE0580A9B0 /* Pods_FlickrClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FlickrClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBDE751D8D20E66771420BA8 /* Pods-FlickrClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlickrClient.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FlickrClient/Pods-FlickrClient.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -168,6 +172,7 @@
 			isa = PBXGroup;
 			children = (
 				788F3504208BC3C900BF5A4D /* PhotoSearchViewController.swift */,
+				785B0504208CB09200FD081F /* PhotoDetailsViewController.swift */,
 				788F3508208BC9B000BF5A4D /* PhotoCell.swift */,
 				788F34CC208BB69300BF5A4D /* Main.storyboard */,
 			);
@@ -178,7 +183,7 @@
 			isa = PBXGroup;
 			children = (
 				788F3506208BC5CD00BF5A4D /* PhotoSearchViewModel.swift */,
-				788F350A208BD96100BF5A4D /* PhotoViewModel.swift */,
+				788F350A208BD96100BF5A4D /* PhotoDetailsViewModel.swift */,
 			);
 			path = "View Model";
 			sourceTree = "<group>";
@@ -187,6 +192,7 @@
 			isa = PBXGroup;
 			children = (
 				788F3500208BBB7500BF5A4D /* Photo.swift */,
+				785B0502208CA03D00FD081F /* Owner.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -390,12 +396,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				785B0503208CA03D00FD081F /* Owner.swift in Sources */,
 				788F3509208BC9B000BF5A4D /* PhotoCell.swift in Sources */,
 				788F3505208BC3C900BF5A4D /* PhotoSearchViewController.swift in Sources */,
 				788F3507208BC5CD00BF5A4D /* PhotoSearchViewModel.swift in Sources */,
 				788F3501208BBB7500BF5A4D /* Photo.swift in Sources */,
 				788F34FF208BB9FA00BF5A4D /* FlickrAPI.swift in Sources */,
-				788F350B208BD96100BF5A4D /* PhotoViewModel.swift in Sources */,
+				785B0505208CB09200FD081F /* PhotoDetailsViewController.swift in Sources */,
+				788F350B208BD96100BF5A4D /* PhotoDetailsViewModel.swift in Sources */,
 				788F34FC208BB6E000BF5A4D /* URLSession+Extensions.swift in Sources */,
 				788F34C9208BB69300BF5A4D /* AppDelegate.swift in Sources */,
 			);

@@ -10,7 +10,7 @@ import Foundation
 
 class PhotoSearchViewModel {
     
-    fileprivate let searchApi: FlickSearchAPI = FlickrAPI()
+    fileprivate let searchApi: FlickrSearchAPI = FlickrSearchAPIDefault()
     
     fileprivate let perPage = 50
     fileprivate var currentPage: Int!
