@@ -67,13 +67,14 @@ class PhotoDetailsViewController: UIViewController {
         let photo = viewModel.photo
         titleLabel.text = photo.title
         
-        if photo.description!.isEmpty {
+        let description = photo.description ?? ""
+        if description.isEmpty {
             descriptionTextHeightConstraint.constant = 0
         } else {
-            if let descriptionAsData = photo.description?.data(using: String.Encoding.utf8), let attributedDescription = try? NSAttributedString(data: descriptionAsData, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
+            if let descriptionAsData = description.data(using: String.Encoding.utf8), let attributedDescription = try? NSAttributedString(data: descriptionAsData, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
                 descriptionTextView.attributedText = attributedDescription
             } else {
-                descriptionTextView.text = photo.description!
+                descriptionTextView.text = description
             }
             descriptionTextHeightConstraint.constant = descriptionTextView.contentSize.height
         }

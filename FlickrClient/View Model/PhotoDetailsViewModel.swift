@@ -20,7 +20,9 @@ class PhotoDetailsViewModel {
     
     func loadInfo(completition: @escaping () -> ()) {
         photoApi.infoAbout(photo: photo) { [weak self] updatedPhoto in
-            self?.photo = updatedPhoto
+            if updatedPhoto != nil {
+                self?.photo = updatedPhoto!
+            }
             completition()
         }
     }

@@ -15,7 +15,7 @@ protocol FlickrSearchAPI {
 }
 
 protocol FlickrPhotoAPI {
-    func infoAbout(photo: Photo, completition: @escaping (Photo) -> ())
+    func infoAbout(photo: Photo, completition: @escaping (Photo?) -> ())
 }
 
 class FlickrAPI {
@@ -81,7 +81,7 @@ class FlickrPhotoAPIDefault: FlickrAPI, FlickrPhotoAPI {
     
     let methodName = "flickr.photos.getInfo"
     
-    func infoAbout(photo: Photo, completition: @escaping (Photo) -> ()) {
+    func infoAbout(photo: Photo, completition: @escaping (Photo?) -> ()) {
         var queryItems =
             ["method": methodName,
              "api_key": apiKey,
@@ -97,30 +97,36 @@ class FlickrPhotoAPIDefault: FlickrAPI, FlickrPhotoAPI {
                 return
             }
             
-            let json = JSON(data).dictionary!["photo"]!.dictionary!
+            guard let json = JSON(data).dictionary?["photo"]!.dictionary else {
+                completition(nil)
+                return
+            }
             
-            let jsonOwner = json["owner"]!.dictionary!
-            let nsid = jsonOwner["nsid"]!.string!
-            let username = jsonOwner["username"]!.string!
-            let realname = jsonOwner["realname"]!.string!
-            let location = jsonOwner["location"]!.string!
-            let iconserver = jsonOwner["iconserver"]!.string!
-            let iconfarm = jsonOwner["iconfarm"]!.int!
-            let avatarURL = URL(string: "http://farm\(iconfarm).staticflickr.com/\(iconserver)/buddyicons/\(nsid).jpg")!
-            let owner = Owner(username: username,
+            var owner: Owner?
+            if let jsonOwner = json["owner"]?.dictionary,
+                let nsid = jsonOwner["nsid"]?.string,
+                let username = jsonOwner["username"]?.string,
+                let realname = jsonOwner["realname"]?.string,
+                let location = jsonOwner["location"]?.string,
+                let iconserver = jsonOwner["iconserver"]?.string,
+                let iconfarm = jsonOwner["iconfarm"]?.int,
+                let avatarURL = URL(string: "http://farm\(iconfarm).staticflickr.com/\(iconserver)/buddyicons/\(nsid).jpg") {
+                owner = Owner(username: username,
                               realname: realname,
                               location: location,
                               avatarUrl: avatarURL)
-            
-            let title = json["title"]!.dictionary!["_content"]!.string!
-            let description = json["description"]!.dictionary!["_content"]!.string!
-            let date = json["dateuploaded"]!.numberValue
+            }
             
             var updatedPhoto = photo
-            updatedPhoto.title = title
-            updatedPhoto.description = description
-            updatedPhoto.date = Date(timeIntervalSince1970: date.doubleValue)
             updatedPhoto.owner = owner
+            
+            if let title = json["title"]?.dictionary?["_content"]?.string,
+                let description = json["description"]?.dictionary?["_content"]?.string,
+                let date = json["dateuploaded"]?.numberValue {
+                updatedPhoto.title = title
+                updatedPhoto.description = description
+                updatedPhoto.date = Date(timeIntervalSince1970: date.doubleValue)
+            }
             
             completition(updatedPhoto)
         }
