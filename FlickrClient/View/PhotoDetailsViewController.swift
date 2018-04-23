@@ -109,5 +109,16 @@ class PhotoDetailsViewController: UIViewController {
             imageHeightConstraint.constant = rate * imageViewWidth
         }
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let user = viewModel.photo.owner {
+            let vc = segue.destination as! UserDetailsViewController
+            vc.viewModel = UserDetailsViewModel(withUser: user)
+        }
+    }
+    
+    @IBAction func onProfileIconClick(_ sender: Any) {
+        self.performSegue(withIdentifier: "showUserProfile", sender: nil)
+    }
 
 }

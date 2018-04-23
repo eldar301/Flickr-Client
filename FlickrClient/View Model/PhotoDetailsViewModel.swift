@@ -10,8 +10,8 @@ import Foundation
 
 class PhotoDetailsViewModel {
     
-    fileprivate let photoApi = FlickrPhotoAPIDefault()
-    
+    fileprivate let photoApi: FlickrPhotoAPIDefault = FlickrPhotoAPIDefault()
+
     var photo: Photo
     
     init(withPhoto photo: Photo) {

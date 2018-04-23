@@ -35,7 +35,7 @@ class PhotoSearchViewModel {
     }
     
     fileprivate func doSearch(text: String, page: Int, completition: @escaping () -> ()) {
-        searchApi.searchPhotos(withText: text, page: page, perPage: perPage) { [weak self] (photos, timeline) in
+        searchApi.searchPhotos(fromSource: .text(text), page: page, perPage: perPage) { [weak self] (photos, timeline) in
             guard let strongSelf = self else { return }
             strongSelf.currentPage = timeline.currentPage
             strongSelf.lastLoadedPage = timeline.currentPage
