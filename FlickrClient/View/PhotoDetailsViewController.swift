@@ -2,7 +2,7 @@
 //  PhotoDetailsViewController.swift
 //  FlickrClient
 //
-//  Created by Eldar Goloviznin on 22.04.18.
+//  Created by Eldar Goloviznin on 14/05/2018.
 //  Copyright © 2018 Eldar Goloviznin. All rights reserved.
 //
 
@@ -10,115 +10,73 @@ import UIKit
 
 class PhotoDetailsViewController: UIViewController {
     
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var descriptionTextView: UITextView!
-    @IBOutlet weak var dateLabel: UILabel!
-    @IBOutlet weak var avatarImageView: UIImageView!
-    @IBOutlet weak var usernameLabel: UILabel!
-    @IBOutlet weak var realnameLabel: UILabel!
-    @IBOutlet weak var locationLabel: UILabel!
     
-    @IBOutlet weak var descriptionTextHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var imageHeightConstraint: NSLayoutConstraint!
+    var photo: Photo!
     
-    let dateFormatter = DateFormatter()
+    let maximumZoomScale: CGFloat = 4
+    let minimumZoomScale: CGFloat = 1
     
-    var viewModel: PhotoDetailsViewModel!
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureImageViews()
-        configureDateFormatter()
-        trySetupWithCachedData()
-
-        viewModel.loadInfo { [weak self] in
-            DispatchQueue.main.async {
-                self?.setupWithUpdatedData()
-            }
-        }
+        configureImageView()
+        setupImage()
+        configureScrollView()
     }
     
-    func configureImageViews() {
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        avatarImageView.contentMode = .scaleAspectFit
-        avatarImageView.layer.cornerRadius = avatarImageView.bounds.width / 2
-        avatarImageView.clipsToBounds = true
-    }
-    
-    func configureDateFormatter() {
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .none
-    }
-    
-    func congifure(withPhoto photo: Photo) {
-        viewModel = PhotoDetailsViewModel(withPhoto: photo)
-    }
-    
-    func trySetupWithCachedData() {
-        if let cachedImage = viewModel.photo.image {
-            update(withImage: UIImage(data: cachedImage))
-        }
-    }
-    
-    func setupWithUpdatedData() {
-        let photo = viewModel.photo
-        titleLabel.text = photo.title
+    func configureImageView() {
+        imageView.contentMode = .scaleAspectFit
         
-        let description = photo.description ?? ""
-        if description.isEmpty {
-            descriptionTextHeightConstraint.constant = 0
+        imageView.isUserInteractionEnabled = true
+        let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageViewDoubleTap(gestureRecognizer:)))
+        doubleTapGestureRecognizer.numberOfTapsRequired = 2
+        imageView.addGestureRecognizer(doubleTapGestureRecognizer)
+    }
+    
+    @objc func imageViewDoubleTap(gestureRecognizer: UITapGestureRecognizer) {
+        if scrollView.zoomScale != minimumZoomScale {
+            scrollView.setZoomScale(minimumZoomScale, animated: true)
         } else {
-            if let descriptionAsData = description.data(using: String.Encoding.utf8), let attributedDescription = try? NSAttributedString(data: descriptionAsData, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
-                descriptionTextView.attributedText = attributedDescription
-            } else {
-                descriptionTextView.text = description
-            }
-            descriptionTextHeightConstraint.constant = descriptionTextView.contentSize.height
+            let tapPoint = gestureRecognizer.location(in: scrollView)
+            let rectToZoom = CGRect(origin: tapPoint, size: .zero)
+            scrollView.zoom(to: rectToZoom, animated: true)
         }
-        
-        dateLabel.text = dateFormatter.string(from: photo.date ?? Date())
-        usernameLabel.text = photo.owner?.username
-        realnameLabel.text = photo.owner?.realname
-        locationLabel.text = photo.owner?.location
-        
-        if imageView.image == nil {
-            let imageTask = URLSession.shared.cachedImage(url: photo.url) { image in
-                DispatchQueue.main.async { [weak self] in
-                    self?.update(withImage: image)
+    }
+    
+    func setupImage() {
+        let fullsizeURL = photo.fullsizeURL
+        if let cachedFullsizeImage = URLSession.shared.cachedImage(url: fullsizeURL) {
+            self.imageView.image = cachedFullsizeImage
+        } else if let cachedThumbnailImage = URLSession.shared.cachedImage(url: photo.thumbnailURL) {
+            self.imageView.image = cachedThumbnailImage
+            let fullsizeImageTask = URLSession.shared.cachedImage(url: fullsizeURL) { [weak self] image in
+                DispatchQueue.main.async {
+                    self?.imageView.image = image
                 }
             }
-            imageTask?.resume()
-        }
-        
-        let avatarTask = URLSession.shared.cachedImage(url: photo.owner!.avatarUrl) { image in
-            DispatchQueue.main.async { [weak self] in
-                self?.avatarImageView.image = image
-            }
-        }
-        avatarTask?.resume()
-    }
-    
-    func update(withImage image: UIImage?) {
-        imageView.image = image
-        if let image = image?.cgImage {
-            let imageViewWidth = imageView.bounds.width
-            let rate = CGFloat(image.height) / CGFloat(image.width)
-            imageHeightConstraint.constant = rate * imageViewWidth
+            fullsizeImageTask?.resume()
         }
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let user = viewModel.photo.owner {
-            let vc = segue.destination as! UserDetailsViewController
-            vc.viewModel = UserDetailsViewModel(withUser: user)
-        }
+    func configureScrollView() {
+        scrollView.minimumZoomScale = minimumZoomScale
+        scrollView.maximumZoomScale = maximumZoomScale
+        scrollView.delegate = self
     }
     
-    @IBAction func onProfileIconClick(_ sender: Any) {
-        self.performSegue(withIdentifier: "showUserProfile", sender: nil)
+    @IBAction func exportImage(_ sender: Any) {
+        let activityController = UIActivityViewController(activityItems: [self.imageView.image], applicationActivities: nil)
+        self.present(activityController, animated: true)
     }
+    
+}
 
+extension PhotoDetailsViewController: UIScrollViewDelegate {
+    
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return imageView
+    }
+    
 }

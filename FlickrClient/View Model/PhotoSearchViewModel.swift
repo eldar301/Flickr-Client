@@ -8,40 +8,50 @@
 
 import Foundation
 
+protocol PhotoSearchCallback: class {
+    func searchCompleted()
+    func searchFailed()
+}
+
 class PhotoSearchViewModel {
+    
+    weak var callback: PhotoSearchCallback?
     
     fileprivate let searchApi: FlickrSearchAPI = FlickrSearchAPIDefault()
     
     fileprivate let perPage = 50
     fileprivate var currentPage: Int!
     fileprivate var lastLoadedPage: Int!
-    fileprivate var totalPages: Int!
+    fileprivate var total: Int!
     
     var photos: [Photo] = []
     
-    func search(text: String, completition: @escaping () -> ()) {
+    private var inProgress: Bool = false
+    
+    func search(text: String) {
         searchApi.cancel()
         photos = []
-        doSearch(text: text, page: 1, completition: completition)
+        doSearch(text: text, page: 1)
     }
     
-    func loadNext(text: String, completition: @escaping () -> ()) {
-        guard currentPage < totalPages, currentPage == lastLoadedPage else {
+    func loadNext(text: String) {
+        guard photos.count < total, !inProgress else {
             return
         }
+        
+        inProgress = true
         searchApi.cancel()
-        currentPage = currentPage + 1
-        doSearch(text: text, page: currentPage, completition: completition)
+        doSearch(text: text, page: currentPage + 1)
     }
     
-    fileprivate func doSearch(text: String, page: Int, completition: @escaping () -> ()) {
-        searchApi.searchPhotos(fromSource: .text(text), page: page, perPage: perPage) { [weak self] (photos, timeline) in
-            guard let strongSelf = self else { return }
-            strongSelf.currentPage = timeline.currentPage
-            strongSelf.lastLoadedPage = timeline.currentPage
-            strongSelf.totalPages = timeline.totalPages
-            strongSelf.photos.append(contentsOf: photos)
-            completition()
+    fileprivate func doSearch(text: String, page: Int) {
+        searchApi.searchPhotos(withText: text, page: page, perPage: perPage) { [weak self] (newPhotos, timeline) in
+            self?.inProgress = false
+            self?.currentPage = timeline.currentPage
+            self?.lastLoadedPage = timeline.currentPage
+            self?.total = timeline.total
+            self?.photos.append(contentsOf: newPhotos)
+            self?.callback?.searchCompleted()
         }
     }
 }

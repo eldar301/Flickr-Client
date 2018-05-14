@@ -17,28 +17,36 @@ class PhotoCell: UICollectionViewCell {
     
     var photo: Photo!
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        self.imageView.contentMode = .scaleAspectFill
+        self.acitivtyIndicator.hidesWhenStopped = true
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         
         imageTask?.cancel()
         imageView.image = nil
+        imageView.stopAnimating()
     }
     
     func configureView(withPhoto photo: Photo) {
-        self.imageView.contentMode = .scaleAspectFill
         self.photo = photo
-        self.acitivtyIndicator.hidesWhenStopped = true
-        self.acitivtyIndicator.startAnimating()
-        imageTask = URLSession.shared.cachedImage(url: photo.url, completition: { [weak self] image in
-            DispatchQueue.main.async {
-                self?.acitivtyIndicator.stopAnimating()
-                self?.imageView.image = image
-                if let image = image {
-                    self?.photo?.image = UIImagePNGRepresentation(image)
+        let url = photo.thumbnailURL
+        if let cached = URLSession.shared.cachedImage(url: url) {
+            self.imageView.image = cached
+        } else {
+            self.acitivtyIndicator.startAnimating()
+            imageTask = URLSession.shared.cachedImage(url: url, completition: { [weak self] image in
+                DispatchQueue.main.async {
+                    self?.acitivtyIndicator.stopAnimating()
+                    self?.imageView.image = image
                 }
-            }
-        })
-        imageTask?.resume()
+            })
+            imageTask?.resume()
+        }
     }
     
 }

@@ -9,22 +9,9 @@
 import Foundation
 import SwiftyJSON
 
-enum FlickAPISearchSource {
-    case text(String)
-    case user(Owner)
-}
-
 protocol FlickrSearchAPI {
-    func searchPhotos(fromSource: FlickAPISearchSource, page: Int, perPage: Int, completition: @escaping ([Photo], (currentPage: Int, totalPages: Int)) -> ())
+    func searchPhotos(withText: String, page: Int, perPage: Int, completition: @escaping ([Photo], (currentPage: Int, total: Int)) -> ())
     func cancel()
-}
-
-protocol FlickrPhotoAPI {
-    func infoAbout(photo: Photo, completition: @escaping (Photo?) -> ())
-}
-
-protocol FlickrUserAPI {
-    func infoAbout(user: Owner, completition: @escaping (Owner) -> ())
 }
 
 class FlickrAPI {
@@ -51,23 +38,15 @@ class FlickrSearchAPIDefault: FlickrAPI, FlickrSearchAPI {
     let textSearchMethodName = "flickr.photos.search"
     let userSearchMethodName = "flickr.people.getPhotosOf"
     
-    func searchPhotos(fromSource source: FlickAPISearchSource, page: Int, perPage: Int, completition: @escaping ([Photo], (currentPage: Int, totalPages: Int)) -> ()) {
-        var queries =
+    func searchPhotos(withText text: String, page: Int, perPage: Int, completition: @escaping ([Photo], (currentPage: Int, total: Int)) -> ()) {
+        let queries =
             ["api_key": apiKey,
              "per_page": String(perPage),
-             "page": String(page)]
-        
-        switch source {
-        case .text(let text):
-            queries.updateValue(textSearchMethodName, forKey: "method")
-            queries.updateValue(text, forKey: "text")
-            
-        case .user(let user):
-            queries.updateValue(userSearchMethodName, forKey: "method")
-            queries.updateValue(user.nsid, forKey: "user_id")
-        }
-        
-        let url = buildURL(withQueries: queries)
+             "page": String(page),
+             "method": textSearchMethodName,
+             "text": text]
+
+        let url = self.buildURL(withQueries: queries)
         
         currentTask = URLSession.shared.data(request: URLRequest(url: url)) { data in
             guard let data = data else {
@@ -77,7 +56,7 @@ class FlickrSearchAPIDefault: FlickrAPI, FlickrSearchAPI {
             let json = JSON(data).dictionary!["photos"]!.dictionary!
             
             let page = json["page"]!.intValue
-            let totalPages = json["total"]!.intValue
+            let total = json["total"]!.intValue
             
             let jsonPhotos = json["photo"]!.array!
             let photos = jsonPhotos.map { jsonPhoto -> Photo in
@@ -86,11 +65,12 @@ class FlickrSearchAPIDefault: FlickrAPI, FlickrSearchAPI {
                 let farm = dictionary["farm"]!.int!
                 let server = dictionary["server"]!.string!
                 let secret = dictionary["secret"]!.string!
-                let url = URL(string: "https://farm\(farm).staticflickr.com/\(server)/\(id)_\(secret).jpg")!
-                return Photo(id: id, url: url)
+                let thumbnailURL = URL(string: "https://farm\(farm).staticflickr.com/\(server)/\(id)_\(secret)_q.jpg")!
+                let fullsizeURL = URL(string: "https://farm\(farm).staticflickr.com/\(server)/\(id)_\(secret).jpg")!
+                return Photo(id: id, thumbnailURL: thumbnailURL, fullsizeURL: fullsizeURL)
             }
             
-            completition(photos, (currentPage: page, totalPages: totalPages))
+            completition(photos, (currentPage: page, total: total))
         }
         
         currentTask?.resume()
@@ -98,100 +78,6 @@ class FlickrSearchAPIDefault: FlickrAPI, FlickrSearchAPI {
     
     func cancel() {
         currentTask?.cancel()
-    }
-    
-}
-
-class FlickrPhotoAPIDefault: FlickrAPI, FlickrPhotoAPI {
-    
-    let methodName = "flickr.photos.getInfo"
-    
-    func infoAbout(photo: Photo, completition: @escaping (Photo?) -> ()) {
-        let queries =
-            ["method": methodName,
-             "api_key": apiKey,
-             "photo_id": photo.id]
-        
-        let url = buildURL(withQueries: queries)
-        
-        URLSession.shared.data(request: URLRequest(url: url)) { data in
-            guard let data = data else {
-                return
-            }
-            
-            guard let json = JSON(data).dictionary?["photo"]!.dictionary else {
-                completition(nil)
-                return
-            }
-            
-            var owner: Owner?
-            if let jsonOwner = json["owner"]?.dictionary,
-                let nsid = jsonOwner["nsid"]?.string,
-                let username = jsonOwner["username"]?.string,
-                let realname = jsonOwner["realname"]?.string,
-                let location = jsonOwner["location"]?.string,
-                let iconserver = jsonOwner["iconserver"]?.string,
-                let iconfarm = jsonOwner["iconfarm"]?.int,
-                let avatarURL = URL(string: "http://farm\(iconfarm).staticflickr.com/\(iconserver)/buddyicons/\(nsid).jpg") {
-                owner = Owner(nsid: nsid,
-                              username: username,
-                              realname: realname,
-                              location: location,
-                              avatarUrl: avatarURL)
-            }
-            
-            var updatedPhoto = photo
-            updatedPhoto.owner = owner
-            
-            if let title = json["title"]?.dictionary?["_content"]?.string,
-                let description = json["description"]?.dictionary?["_content"]?.string,
-                let date = json["dateuploaded"]?.numberValue {
-                updatedPhoto.title = title
-                updatedPhoto.description = description
-                updatedPhoto.date = Date(timeIntervalSince1970: date.doubleValue)
-            }
-            
-            completition(updatedPhoto)
-        }
-        .resume()
-    }
-    
-}
-
-class FlickrUserAPIDefault: FlickrAPI, FlickrUserAPI {
-    
-    let methodName = "flickr.people.getInfo"
-    
-    func infoAbout(user: Owner, completition: @escaping (Owner) -> ()) {
-        let queries =
-            ["method": methodName,
-             "api_key": apiKey,
-             "user_id]": user.nsid]
-        
-        let url = buildURL(withQueries: queries)
-        
-        URLSession.shared.data(request: URLRequest(url: url)) { data in
-            guard let data = data else {
-                return
-            }
-            
-            var updatedUser = user
-            
-            if let json = JSON(data).dictionary,
-                let username = json["username"]?.dictionary?["_content"]?.string,
-                let realname = json["realname"]?.dictionary?["_content"]?.string,
-                let description = json["description"]?.dictionary?["_content"]?.string,
-                let location = json["location"]?.dictionary?["_content"]?.string {
-                
-                updatedUser.username = username
-                updatedUser.realname = realname
-                updatedUser.description = description
-                updatedUser.location = location
-            }
-            
-            completition(updatedUser)
-        }
-        .resume()
     }
     
 }

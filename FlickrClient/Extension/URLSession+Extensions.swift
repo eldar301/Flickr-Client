@@ -33,7 +33,7 @@ extension URLSession {
     }
     
     func cachedImage(url: URL, completition: @escaping (UIImage?) -> ()) -> URLSessionDataTask? {
-        if let cached = cache.object(forKey: url as NSURL) {
+        if let cached = cachedImage(url: url) {
             completition(cached)
             return nil
         }
@@ -50,6 +50,10 @@ extension URLSession {
             
             completition(image)
         })
+    }
+    
+    func cachedImage(url: URL) -> UIImage? {
+        return cache.object(forKey: url as NSURL)
     }
     
 }
