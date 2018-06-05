@@ -15,10 +15,12 @@ class PhotoSearchViewController: UIViewController {
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var collectionView: UICollectionView!
     
+    private var registerContext: UIViewControllerPreviewing?
+    
     let viewModel = PhotoSearchViewModel()
     
     private let spaceBetweenCells: CGFloat = 2
-    
+
     private var needToScrollTop: Bool = false
     
     override func viewDidLoad() {
@@ -32,16 +34,27 @@ class PhotoSearchViewController: UIViewController {
     }
     
     func configureCollectionView() {
+        collectionView.register(UINib(nibName: "PhotoCell", bundle: nil), forCellWithReuseIdentifier: reusableIdentifier)
+        
         collectionView.dataSource = self
         collectionView.delegate = self
     }
     
     func configureSearchBar() {
+        searchBar.becomeFirstResponder()
         searchBar.delegate = self
     }
     
     func configurePreviewDetails() {
-        self.registerForPreviewing(with: self, sourceView: collectionView)
+        registerContext = self.registerForPreviewing(with: self, sourceView: collectionView)
+    }
+    
+    func unconfigurePreviewDetails() {
+        guard let registerContext = registerContext else {
+            return
+        }
+        
+        self.unregisterForPreviewing(withContext: registerContext)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		3771A52D40DF1AEA7E02641B /* Pods_FlickrClientUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E91C6FAC3D00FCDF2DE582E /* Pods_FlickrClientUITests.framework */; };
+		7804573B20AAED2D001E10FA /* CompactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7804573A20AAED2D001E10FA /* CompactViewController.swift */; };
+		7804573D20AAED98001E10FA /* ExpandedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7804573C20AAED98001E10FA /* ExpandedViewController.swift */; };
+		7804574320AAF133001E10FA /* PhotoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7804574120AAF133001E10FA /* PhotoCell.xib */; };
 		780FDD1120A9B8A300CD8FCC /* PhotoDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780FDD1020A9B8A300CD8FCC /* PhotoDetailsViewController.swift */; };
 		780FDD1820A9F02200CD8FCC /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 780FDD1720A9F02200CD8FCC /* Messages.framework */; };
 		780FDD1B20A9F02200CD8FCC /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780FDD1A20A9F02200CD8FCC /* MessagesViewController.swift */; };
@@ -34,6 +37,7 @@
 		788F3505208BC3C900BF5A4D /* PhotoSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788F3504208BC3C900BF5A4D /* PhotoSearchViewController.swift */; };
 		788F3507208BC5CD00BF5A4D /* PhotoSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788F3506208BC5CD00BF5A4D /* PhotoSearchViewModel.swift */; };
 		788F3509208BC9B000BF5A4D /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788F3508208BC9B000BF5A4D /* PhotoCell.swift */; };
+		7897235420AAF806005BDFA6 /* PhotoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7804574120AAF133001E10FA /* PhotoCell.xib */; };
 		799332CA175F2B10C573B7A9 /* Pods_iMessageFlickr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E980FE35381744C55EF72A2 /* Pods_iMessageFlickr.framework */; };
 		87D7D4BA6BE4724B44BCE1D5 /* Pods_FlickrClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8EAF75EC607FBEE0580A9B0 /* Pods_FlickrClient.framework */; };
 		F461707C1BB94CDBFD3F8E40 /* Pods_FlickrClientTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 175976982C8CF01970894B03 /* Pods_FlickrClientTests.framework */; };
@@ -83,6 +87,9 @@
 		474D245C88F4505E33D03AFD /* Pods-FlickrClientTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlickrClientTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-FlickrClientTests/Pods-FlickrClientTests.release.xcconfig"; sourceTree = "<group>"; };
 		54D12651B3F21625E4FBD125 /* Pods-FlickrClientTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlickrClientTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FlickrClientTests/Pods-FlickrClientTests.debug.xcconfig"; sourceTree = "<group>"; };
 		76B491B968A172E44D4B2CE0 /* Pods-FlickrClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlickrClient.release.xcconfig"; path = "Pods/Target Support Files/Pods-FlickrClient/Pods-FlickrClient.release.xcconfig"; sourceTree = "<group>"; };
+		7804573A20AAED2D001E10FA /* CompactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactViewController.swift; sourceTree = "<group>"; };
+		7804573C20AAED98001E10FA /* ExpandedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedViewController.swift; sourceTree = "<group>"; };
+		7804574120AAF133001E10FA /* PhotoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhotoCell.xib; sourceTree = "<group>"; };
 		780FDD1020A9B8A300CD8FCC /* PhotoDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailsViewController.swift; sourceTree = "<group>"; };
 		780FDD1620A9F02200CD8FCC /* iMessageFlickr.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = iMessageFlickr.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		780FDD1720A9F02200CD8FCC /* Messages.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Messages.framework; path = System/Library/Frameworks/Messages.framework; sourceTree = SDKROOT; };
@@ -173,6 +180,8 @@
 			isa = PBXGroup;
 			children = (
 				780FDD1A20A9F02200CD8FCC /* MessagesViewController.swift */,
+				7804573A20AAED2D001E10FA /* CompactViewController.swift */,
+				7804573C20AAED98001E10FA /* ExpandedViewController.swift */,
 				780FDD1C20A9F02200CD8FCC /* MainInterface.storyboard */,
 				780FDD1F20A9F02300CD8FCC /* Assets.xcassets */,
 				780FDD2120A9F02300CD8FCC /* Info.plist */,
@@ -253,6 +262,7 @@
 				788F3508208BC9B000BF5A4D /* PhotoCell.swift */,
 				780FDD1020A9B8A300CD8FCC /* PhotoDetailsViewController.swift */,
 				788F34CC208BB69300BF5A4D /* Main.storyboard */,
+				7804574120AAF133001E10FA /* PhotoCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -437,6 +447,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7897235420AAF806005BDFA6 /* PhotoCell.xib in Resources */,
 				780FDD2920A9F25E00CD8FCC /* Main.storyboard in Resources */,
 				780FDD2020A9F02300CD8FCC /* Assets.xcassets in Resources */,
 				780FDD1E20A9F02200CD8FCC /* MainInterface.storyboard in Resources */,
@@ -450,6 +461,7 @@
 				788F34D3208BB69300BF5A4D /* LaunchScreen.storyboard in Resources */,
 				788F34D0208BB69300BF5A4D /* Assets.xcassets in Resources */,
 				788F34CE208BB69300BF5A4D /* Main.storyboard in Resources */,
+				7804574320AAF133001E10FA /* PhotoCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -568,6 +580,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7804573B20AAED2D001E10FA /* CompactViewController.swift in Sources */,
+				7804573D20AAED98001E10FA /* ExpandedViewController.swift in Sources */,
 				780FDD2F20A9F4FB00CD8FCC /* PhotoDetailsViewController.swift in Sources */,
 				780FDD1B20A9F02200CD8FCC /* MessagesViewController.swift in Sources */,
 				780FDD2B20A9F46600CD8FCC /* PhotoSearchViewModel.swift in Sources */,

@@ -11,6 +11,9 @@ import Messages
 
 class MessagesViewController: MSMessagesAppViewController {
     
+    let compactID = "compactVC"
+    let expandedID = "expandedVC"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -28,6 +31,41 @@ class MessagesViewController: MSMessagesAppViewController {
         // This will happen when the extension is about to present UI.
         
         // Use this method to configure the extension and restore previously stored state.
+    }
+    
+    override func didBecomeActive(with conversation: MSConversation) {
+        presentVC(presentationStyle: self.presentationStyle)
+    }
+    
+    func presentVC(presentationStyle: MSMessagesAppPresentationStyle) {
+        let identifier = (presentationStyle == .compact) ? compactID : expandedID
+        let controller = storyboard!.instantiateViewController(withIdentifier: identifier)
+        
+        for child in childViewControllers {
+            child.willMove(toParentViewController: nil)
+            child.view.removeFromSuperview()
+            child.removeFromParentViewController()
+        }
+        
+        self.addChildViewController(controller)
+        
+        controller.view.frame = view.bounds
+        controller.view.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(controller.view)
+        
+        controller.view.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        controller.view.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        controller.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        controller.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        controller.didMove(toParentViewController: self)
+        
+        if let compact = controller as? CompactViewController {
+            compact.delegate = self
+        }
+        else if let expanded = controller as? ExpandedViewController {
+            expanded.delegate = self
+        }
     }
     
     override func didResignActive(with conversation: MSConversation) {
@@ -67,6 +105,43 @@ class MessagesViewController: MSMessagesAppViewController {
         // Called after the extension transitions to a new presentation style.
         
         // Use this method to finalize any behaviors associated with the change in presentation style.
+        presentVC(presentationStyle: presentationStyle)
     }
 
+}
+
+extension MessagesViewController: CompactDelegate {
+    
+    func startSearch() {
+        self.requestPresentationStyle(.expanded)
+    }
+    
+}
+
+extension MessagesViewController: ExpandedDelegate {
+    
+    func chosen(photo: Photo) {
+        let url = photo.thumbnailURL
+        if let cached = URLSession.shared.cachedImage(url: url) {
+            sendImage(image: cached)
+        } else {
+            let imageTask = URLSession.shared.cachedImage(url: url, completition: { [weak self] image in
+                self?.sendImage(image: image)
+            })
+            imageTask?.resume()
+        }
+        self.requestPresentationStyle(.compact)
+    }
+    
+    func sendImage(image: UIImage?) {
+        let session = MSSession()
+        let message = MSMessage(session: session)
+        let layout = MSMessageTemplateLayout()
+        
+        layout.image = image
+        
+        message.layout = layout
+        self.activeConversation?.insert(message)
+    }
+    
 }

@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -32,33 +31,13 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoCell" id="Djs-0M-R6Y" customClass="PhotoCell" customModule="FlickrClient" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="" id="Djs-0M-R6Y" customClass="PhotoCell" customModule="FlickrClient" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="117"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="117"/>
                                             <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eOa-C8-uGo">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="117"/>
-                                                </imageView>
-                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="IIw-NX-Fnp">
-                                                    <rect key="frame" x="177.5" y="48.5" width="20" height="20"/>
-                                                </activityIndicatorView>
-                                            </subviews>
                                         </view>
-                                        <constraints>
-                                            <constraint firstItem="eOa-C8-uGo" firstAttribute="top" secondItem="Djs-0M-R6Y" secondAttribute="top" id="0NF-s6-tvs"/>
-                                            <constraint firstItem="eOa-C8-uGo" firstAttribute="leading" secondItem="Djs-0M-R6Y" secondAttribute="leading" id="VNv-jl-dpV"/>
-                                            <constraint firstAttribute="bottom" secondItem="eOa-C8-uGo" secondAttribute="bottom" id="WQH-hD-jQJ"/>
-                                            <constraint firstItem="IIw-NX-Fnp" firstAttribute="centerX" secondItem="Djs-0M-R6Y" secondAttribute="centerX" id="r77-hx-ALZ"/>
-                                            <constraint firstItem="IIw-NX-Fnp" firstAttribute="centerY" secondItem="Djs-0M-R6Y" secondAttribute="centerY" id="scV-0P-paD"/>
-                                            <constraint firstAttribute="trailing" secondItem="eOa-C8-uGo" secondAttribute="trailing" id="srK-2x-xoX"/>
-                                        </constraints>
-                                        <connections>
-                                            <outlet property="acitivtyIndicator" destination="IIw-NX-Fnp" id="7Om-zH-o5M"/>
-                                            <outlet property="imageView" destination="eOa-C8-uGo" id="vvw-d3-UzB"/>
-                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
